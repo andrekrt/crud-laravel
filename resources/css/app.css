@@ -1,0 +1,6 @@
+/* importar css do layout */
+@import 'styles_sbadmin.css';
+@import 'styles_admin.css';
+
+/* importar os icones do font wansone */
+@import '@fortawesome/fontawesome-free/css/all.css';
