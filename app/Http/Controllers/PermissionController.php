@@ -24,16 +24,28 @@ class PermissionController extends Controller
     }
 
     // listar permissões
-    public function index(){
+    public function index(Request $request){
 
         // recuperar os registros
-        $permissions = Permission::orderBy('id')->paginate(10);
+        $permissions = Permission::
+        when($request->has('title'), function($whenQuery) use ($request){
+            $whenQuery->where('title', 'like', '%'.$request->title.'%');
+        })
+        ->when($request->has('name'), function($whenQuery) use ($request){
+            $whenQuery->where('name', 'like', '%'.$request->name.'%');
+        })
+        ->orderBy('id')->paginate(10)->withQueryString();
 
         // salvar log
         Log::info('Listar Permissões', ['action_user_id'=>Auth::id()]);
 
         // carregar view
-        return view('permissions.index',['menu'=>'permissions', 'permissions'=>$permissions]);
+        return view('permissions.index',[
+            'menu'=>'permissions',
+            'permissions'=>$permissions,
+            'title'=>$request->title,
+            'name'=>$request->name
+        ]);
     }
 
     // detalhes da permissão

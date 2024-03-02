@@ -24,11 +24,19 @@ class CursoController extends Controller
     }
 
     // listar os cursos
-    public function index(){
+    public function index(Request $request){
         //recuperar os cursos do bd
-        $cursos = Curso::orderByDesc('created_at')->paginate(10);
+        $cursos = Curso::
+        when($request->has('name'), function($whenQuery) use ($request){
+            $whenQuery->where('name','like', '%'.$request->name. '%');
+        })->
+        orderByDesc('created_at')->paginate(10)->withQueryString();
 
-        return view('cursos.index', ['menu'=>'cursos','cursos'=>$cursos]);
+        return view('cursos.index', [
+            'menu'=>'cursos',
+            'cursos'=>$cursos,
+            'name'=>$request->name
+        ]);
     }
 
     //detalhes curso

@@ -26,11 +26,29 @@ class UserController extends Controller
         $this->middleware('permission:destroy-usuario',['only'=>'destroy']);
     }
 
-    public function index(){
+    public function index(Request $request){
 
-        $usuarios = User::orderByDesc('created_at')->paginate(10);
-
-        return view('users.index',['menu'=>'users', 'usuarios'=>$usuarios]);
+        $usuarios = User::when($request->has('name'), function($whenQuery) use ($request){
+            $whenQuery->where('name','like', '%'. $request->name. '%');
+        })
+        ->when($request->has('email'), function($whenQuery) use ($request){
+            $whenQuery->where('email','like', '%'. $request->email. '%');
+        })
+        ->when($request->filled('dataInicio'), function($whenQuery) use ($request){
+            $whenQuery->where('created_at', '>=', \Carbon\Carbon::parse($request->dataInicio)->format('Y-m-d H:i:s'));
+        })
+        ->when($request->filled('dataFinal'), function($whenQuery) use ($request){
+            $whenQuery->where('created_at', '<=', \Carbon\Carbon::parse($request->dataFinal)->format('Y-m-d H:i:s'));
+        })
+        ->orderBy('id')->paginate(10)->withQueryString();
+        return view('users.index',[
+            'menu'=>'users',
+            'usuarios'=>$usuarios,
+            'name'=>$request->name,
+            'email'=>$request->email,
+            'dataInicio'=>$request->dataInicio,
+            'dataFinal'=>$request->dataFinal
+        ]);
 
     }
 

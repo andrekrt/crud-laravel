@@ -13,6 +13,27 @@
         </ol>
     </div>
 
+    <div class="card mb-4 border-light shadow">
+        <div class="card-header space-between-elements">
+            <span>Pesquisa</span>
+        </div>
+        <div class="card-body">
+            <form action="{{ route('aula.index',['cursoId'=>$cursoId]) }}">
+                <div class="row">
+                    <div class="col-md-4 col-sm-12">
+                        <label class="form-label" for="name">Nome</label>
+                        <input type="text" name="name" id="name" class="form-control" value="{{ $name }}" placeholder="Nome do Curso">
+                    </div>
+                    <div class="col-md-4 col-sm-12 mt-4 pt-3" >
+                        <button type="submit" class="btn btn-info btn-sm"><i class="fa-solid fa-magnifying-glass"></i> Pesquisar</button>
+                        <a href="{{ route('aula.index',['cursoId'=>$cursoId]) }}" class="btn btn-warning btn-sm"><i class="fa-solid fa-trash-can"></i> Limpar </a>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
     <div class="card mb-4">
         <div class="card-header space-between-elements">
             <span>Listar</span>

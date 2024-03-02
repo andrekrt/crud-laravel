@@ -26,16 +26,24 @@ class RoleController extends Controller
     }
 
     // listas tipos
-    public function index(){
+    public function index(Request $request){
 
         // recuperar registros do bd
-        $roles = Role::orderBy('id')->paginate(40);
+        $roles = Role::
+        when($request->has('name'), function($whenQuery) use ($request){
+            $whenQuery->where('name', 'like', '%'.$request->name.'%');
+        })->
+        orderBy('id')->paginate(10)->withQueryString();
 
         // salvar log
         Log::info('Listar tipos de usuários', ['action_user_id'=>Auth::id()]);
 
         // carregar view
-        return view('roles.index',['menu'=>'roles', 'roles'=>$roles]);
+        return view('roles.index',[
+            'menu'=>'roles',
+            'roles'=>$roles,
+            'name'=>$request->name
+        ]);
     }
 
     // carregar form de cadastro

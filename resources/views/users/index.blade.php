@@ -11,6 +11,42 @@
         </ol>
     </div>
 
+    <div class="card mb-4 border-light shadow">
+        <div class="card-header space-between-elements">
+            <span>Pesquisa</span>
+        </div>
+        <div class="card-body">
+            <form action=""{{ route('usuario.index') }}>
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        <label class="form-label" for="name">Nome</label>
+                        <input type="text" name="name" id="name" class="form-control" value="{{ $name }}" placeholder="Nome do Usuário">
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                        <label class="form-label" for="email">E-mail</label>
+                        <input type="text" name="email" id="email" class="form-control" value="" placeholder="E-mail do Usuário"  value="{{ $email }}">
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-4 col-sm-12">
+                        <label class="form-label" for="dataInicio">Data de Cadastro Inicial</label>
+                        <input type="datetime-local" name="dataInicio" id="dataInicio" class="form-control" value="{{ $dataInicio }}" >
+                    </div>
+                    <div class="col-md-4 col-sm-12">
+                        <label class="form-label" for="dataFinal">Data de Cadastro Final</label>
+                        <input type="datetime-local" name="dataFinal" id="dataFinal" class="form-control" value="{{ $dataFinal }}">
+                    </div>
+                    <div class="col-md-4 col-sm-12 mt-4 pt-3" >
+                        <button type="submit" class="btn btn-info btn-sm"><i class="fa-solid fa-magnifying-glass"></i> Pesquisar</button>
+                        <a href="{{ route('usuario.index') }}" class="btn btn-warning btn-sm"><i class="fa-solid fa-trash-can"></i> Limpar </a>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
     <div class="card mb-4">
         <div class="card-header space-between-elements">
            <span>Listar</span>

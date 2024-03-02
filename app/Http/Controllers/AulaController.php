@@ -6,6 +6,7 @@ use App\Http\Requests\AulaRequest;
 use App\Models\Aula;
 use App\Models\Curso;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -24,11 +25,20 @@ class AulaController extends Controller
     }
 
     // listar aulas
-    public function index(Curso $cursoId){
+    public function index(Request $request, Curso $cursoId ){
 
-        $aulas=Aula::with('curso')->where('curso_id', $cursoId->id)->orderBy('ordem')->paginate(10);
+        $aulas=Aula::
+        when($request->name, function($whenQuery) use ($request){
+            $whenQuery->where('name','like', '%'.$request->name.'%');
+        })
+        ->with('curso')->where('curso_id', $cursoId->id)->orderBy('ordem')->paginate(10)->withQueryString();
 
-        return view('aulas.index',['menu'=>'cursos','aulas'=>$aulas, 'cursoId'=>$cursoId]);
+        return view('aulas.index',[
+            'menu'=>'cursos',
+            'aulas'=>$aulas,
+            'cursoId'=>$cursoId,
+            'name'=>$request->name
+        ]);
     }
 
     // detalhes da aula

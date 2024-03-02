@@ -22,7 +22,7 @@ class RolePermissionController extends Controller
     }
 
     // listas permissões do tipo de usuario
-    public function index(ModelsRole $roleId){
+    public function index(ModelsRole $roleId, Request $request){
 
         // se o for supr admim, não visualizar as permissões
         if($roleId->name=='Super Admin'){
@@ -37,7 +37,14 @@ class RolePermissionController extends Controller
         $permissionsRole = DB::table('role_has_permissions')->where('role_id',$roleId->id)->pluck('permission_id')->all();
 
         // recuperar todas as permissões
-        $permissions = Permission::get();
+        $permissions = Permission::
+        when($request->has('name'), function($whenQuery) use ($request){
+            $whenQuery->where('name', 'like', '%' . $request->name. '%');
+        })
+        -> when($request->has('title'), function($whenQuery) use ($request){
+            $whenQuery->where('title', 'like', '%' . $request->title. '%');
+        })
+        ->paginate(10)->withQueryString();
 
         // salvar log
         Log::info('Listar permissões do tipo de usuário.', ['papel_id'=>$roleId->id,'action_user_id'=>Auth::id()]);
@@ -47,7 +54,9 @@ class RolePermissionController extends Controller
             'menu'=>'roles',
             'permissionsRole'=>$permissionsRole,
             'permissions'=>$permissions,
-            'role'=>$roleId
+            'role'=>$roleId,
+            'title'=>$request->title,
+            'name'=>$request->name
         ]);
 
     }

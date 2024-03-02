@@ -11,6 +11,31 @@
         </ol>
     </div>
 
+    <div class="card mb-4 border-light shadow">
+        <div class="card-header space-between-elements">
+            <span>Pesquisa</span>
+        </div>
+        <div class="card-body">
+            <form action=""{{ route('permission-index') }}>
+                <div class="row">
+                    <div class="col-md-4 col-sm-12">
+                        <label class="form-label" for="title">Título</label>
+                        <input type="text" name="title" id="title" class="form-control" value="{{ $title }}" placeholder="Nome do Página">
+                    </div>
+                    <div class="col-md-4 col-sm-12">
+                        <label class="form-label" for="name">Permissão</label>
+                        <input type="text" name="name" id="name" class="form-control" value="{{ $name }}" placeholder="Nome da Permissão">
+                    </div>
+                    <div class="col-md-4 col-sm-12 mt-4 pt-3" >
+                        <button type="submit" class="btn btn-info btn-sm"><i class="fa-solid fa-magnifying-glass"></i> Pesquisar</button>
+                        <a href="{{ route('permission-index') }}" class="btn btn-warning btn-sm"><i class="fa-solid fa-trash-can"></i> Limpar </a>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
     <div class="card mb-4">
         <div class="card-header space-between-elements">
            <span>Listar</span>
@@ -49,9 +74,6 @@
                                 @can('edit-curso')
                                     <a href="{{route('permission-edit',['permission'=>$permission->id])}}" class="btn btn-warning btn-sm me-1 mb-1"> <i class="fa-regular fa-pen-to-square"></i> Editar </a>
                                 @endcan
-
-
-                                    <a href="{{route('permission-index',['permission'=>$permission->id])}}" class="btn btn-secondary btn-sm me-1 mb-1"><i class="fa-solid fa-list"></i> Visualizar Aulas</a>
 
                                 @can('destroy-curso')
                                 {{-- como o navegador não aceita o metodo delete o link de exlcusão precisa esta dentro de um fomuçario --}}
