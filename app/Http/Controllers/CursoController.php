@@ -29,13 +29,21 @@ class CursoController extends Controller
         $cursos = Curso::
         when($request->has('name'), function($whenQuery) use ($request){
             $whenQuery->where('name','like', '%'.$request->name. '%');
-        })->
-        orderByDesc('created_at')->paginate(10)->withQueryString();
+        })
+        ->when($request->filled('dataInicio'), function($whenQuery) use ($request){
+            $whenQuery->where('created_at', '>=', \Carbon\Carbon::parse($request->dataInicio)->format('Y-m-d H:i:s'));
+        })
+        ->when($request->filled('dataFinal'), function($whenQuery) use ($request){
+            $whenQuery->where('created_at', '<=', \Carbon\Carbon::parse($request->dataFinal)->format('Y-m-d H:i:s'));
+        })
+        ->orderByDesc('created_at')->paginate(10)->withQueryString();
 
         return view('cursos.index', [
             'menu'=>'cursos',
             'cursos'=>$cursos,
-            'name'=>$request->name
+            'name'=>$request->name,
+            'dataInicio'=>$request->dataInicio,
+            'dataFinal'=>$request->dataFinal
         ]);
     }
 

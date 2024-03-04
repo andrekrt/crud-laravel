@@ -32,8 +32,14 @@ class RoleController extends Controller
         $roles = Role::
         when($request->has('name'), function($whenQuery) use ($request){
             $whenQuery->where('name', 'like', '%'.$request->name.'%');
-        })->
-        orderBy('id')->paginate(10)->withQueryString();
+        })
+        ->when($request->filled('dataInicio'), function($whenQuery) use ($request){
+            $whenQuery->where('created_at', '>=', \Carbon\Carbon::parse($request->dataInicio)->format('Y-m-d H:i:s'));
+        })
+        ->when($request->filled('dataFinal'), function($whenQuery) use ($request){
+            $whenQuery->where('created_at', '<=', \Carbon\Carbon::parse($request->dataFinal)->format('Y-m-d H:i:s'));
+        })
+        ->orderBy('id')->paginate(10)->withQueryString();
 
         // salvar log
         Log::info('Listar tipos de usuários', ['action_user_id'=>Auth::id()]);
@@ -42,7 +48,9 @@ class RoleController extends Controller
         return view('roles.index',[
             'menu'=>'roles',
             'roles'=>$roles,
-            'name'=>$request->name
+            'name'=>$request->name,
+            'dataInicio'=>$request->dataInicio,
+            'dataFinal'=>$request->dataFinal
         ]);
     }
 

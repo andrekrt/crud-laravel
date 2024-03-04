@@ -31,13 +31,21 @@ class AulaController extends Controller
         when($request->name, function($whenQuery) use ($request){
             $whenQuery->where('name','like', '%'.$request->name.'%');
         })
+        ->when($request->filled('dataInicio'), function($whenQuery) use ($request){
+            $whenQuery->where('created_at', '>=', \Carbon\Carbon::parse($request->dataInicio)->format('Y-m-d H:i:s'));
+        })
+        ->when($request->filled('dataFinal'), function($whenQuery) use ($request){
+            $whenQuery->where('created_at', '<=', \Carbon\Carbon::parse($request->dataFinal)->format('Y-m-d H:i:s'));
+        })
         ->with('curso')->where('curso_id', $cursoId->id)->orderBy('ordem')->paginate(10)->withQueryString();
 
         return view('aulas.index',[
             'menu'=>'cursos',
             'aulas'=>$aulas,
             'cursoId'=>$cursoId,
-            'name'=>$request->name
+            'name'=>$request->name,
+            'dataInicio'=>$request->dataInicio,
+            'dataFinal'=>$request->dataFinal
         ]);
     }
 

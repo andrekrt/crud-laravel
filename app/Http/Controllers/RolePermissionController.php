@@ -44,6 +44,12 @@ class RolePermissionController extends Controller
         -> when($request->has('title'), function($whenQuery) use ($request){
             $whenQuery->where('title', 'like', '%' . $request->title. '%');
         })
+        ->when($request->filled('dataInicio'), function($whenQuery) use ($request){
+            $whenQuery->where('created_at', '>=', \Carbon\Carbon::parse($request->dataInicio)->format('Y-m-d H:i:s'));
+        })
+        ->when($request->filled('dataFinal'), function($whenQuery) use ($request){
+            $whenQuery->where('created_at', '<=', \Carbon\Carbon::parse($request->dataFinal)->format('Y-m-d H:i:s'));
+        })
         ->paginate(10)->withQueryString();
 
         // salvar log
@@ -56,7 +62,9 @@ class RolePermissionController extends Controller
             'permissions'=>$permissions,
             'role'=>$roleId,
             'title'=>$request->title,
-            'name'=>$request->name
+            'name'=>$request->name,
+            'dataInicio'=>$request->dataInicio,
+            'dataFinal'=>$request->dataFinal
         ]);
 
     }

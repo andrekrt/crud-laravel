@@ -18,13 +18,24 @@
         <div class="card-body">
             <form action=""{{ route('permission-index') }}>
                 <div class="row">
-                    <div class="col-md-4 col-sm-12">
+                    <div class="col-md-6 col-sm-12">
                         <label class="form-label" for="title">Título</label>
                         <input type="text" name="title" id="title" class="form-control" value="{{ $title }}" placeholder="Nome do Página">
                     </div>
-                    <div class="col-md-4 col-sm-12">
+                    <div class="col-md-6 col-sm-12">
                         <label class="form-label" for="name">Permissão</label>
                         <input type="text" name="name" id="name" class="form-control" value="{{ $name }}" placeholder="Nome da Permissão">
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-4 col-sm-12">
+                        <label class="form-label" for="dataInicio">Data de Cadastro Inicial</label>
+                        <input type="datetime-local" name="dataInicio" id="dataInicio" class="form-control" value="{{ $dataInicio }}" >
+                    </div>
+                    <div class="col-md-4 col-sm-12">
+                        <label class="form-label" for="dataFinal">Data de Cadastro Final</label>
+                        <input type="datetime-local" name="dataFinal" id="dataFinal" class="form-control" value="{{ $dataFinal }}">
                     </div>
                     <div class="col-md-4 col-sm-12 mt-4 pt-3" >
                         <button type="submit" class="btn btn-info btn-sm"><i class="fa-solid fa-magnifying-glass"></i> Pesquisar</button>

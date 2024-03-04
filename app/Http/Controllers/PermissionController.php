@@ -34,6 +34,12 @@ class PermissionController extends Controller
         ->when($request->has('name'), function($whenQuery) use ($request){
             $whenQuery->where('name', 'like', '%'.$request->name.'%');
         })
+        ->when($request->filled('dataInicio'), function($whenQuery) use ($request){
+            $whenQuery->where('created_at', '>=', \Carbon\Carbon::parse($request->dataInicio)->format('Y-m-d H:i:s'));
+        })
+        ->when($request->filled('dataFinal'), function($whenQuery) use ($request){
+            $whenQuery->where('created_at', '<=', \Carbon\Carbon::parse($request->dataFinal)->format('Y-m-d H:i:s'));
+        })
         ->orderBy('id')->paginate(10)->withQueryString();
 
         // salvar log
@@ -44,7 +50,9 @@ class PermissionController extends Controller
             'menu'=>'permissions',
             'permissions'=>$permissions,
             'title'=>$request->title,
-            'name'=>$request->name
+            'name'=>$request->name,
+            'dataInicio'=>$request->dataInicio,
+            'dataFinal'=>$request->dataFinal
         ]);
     }
 
