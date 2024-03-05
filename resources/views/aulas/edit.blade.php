@@ -22,10 +22,10 @@
                 @endcan
                 @can('destrou-aula')
                     {{-- como o navegador não aceita o metodo delete o link de exlcusão precisa esta dentro de um fomuçario --}}
-                    <form method="POST" action="{{route('aula.destroy',['aulaId'=>$aula->id])}}">
+                    <form method="POST" id="edit{{$aula->id}}" action="{{route('aula.destroy',['aulaId'=>$aula->id])}}">
                         @csrf
                         @method('delete')
-                        <button type="submit" class="btn btn-danger btn-sm me-1" onclick="return confirm('Tem certeza excluir?')"><i class="fa-solid fa-trash-can"></i> Excluir</button>
+                        <button type="submit" class="btn btn-danger btn-sm me-1 btnDelete" data-delete-id="{{ $aula->id }}"><i class="fa-solid fa-trash-can"></i> Excluir</button>
                     </form>
                 @endcan
 

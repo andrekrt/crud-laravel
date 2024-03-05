@@ -4,3 +4,9 @@
 
 /* importar os icones do font wansone */
 @import '@fortawesome/fontawesome-free/css/all.css';
+
+/* importar css do select2 e do tema */
+@import 'select2/dist/css/select2.min.css';
+
+/* importar o tema do bootstrap para select2 */
+@import 'select2-bootstrap-5-theme/dist/select2-bootstrap-5-theme.min.css';

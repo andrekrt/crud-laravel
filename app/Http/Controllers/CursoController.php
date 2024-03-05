@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CursoRequest;
 use App\Models\Curso;
+use Barryvdh\DomPDF\Facade\PDF;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -144,6 +145,44 @@ class CursoController extends Controller
         }catch(Exception $e){
             return redirect()->route('curso.index')->with('error',"Erro ao exlcuir curso");
         }
+
+    }
+
+    // gerarpdf
+    public function gerarPdf(Request $request){
+
+        // recuperar dados pesquisados
+        $cursos = Curso::
+        when($request->has('name'), function($whenQuery) use ($request){
+            $whenQuery->where('name','like', '%'.$request->name. '%');
+        })
+        ->when($request->filled('dataInicio'), function($whenQuery) use ($request){
+            $whenQuery->where('created_at', '>=', \Carbon\Carbon::parse($request->dataInicio)->format('Y-m-d H:i:s'));
+        })
+        ->when($request->filled('dataFinal'), function($whenQuery) use ($request){
+            $whenQuery->where('created_at', '<=', \Carbon\Carbon::parse($request->dataFinal)->format('Y-m-d H:i:s'));
+        })
+        ->orderByDesc('created_at')->get();
+
+        // total de registros
+        $totalCursos = $cursos->count('id');
+
+        // verificar se a qtd ultrapassou o limite
+        if($totalCursos>500){
+            return redirect()->route('curso.index',[
+                'menu'=>'cursos',
+                'cursos'=>$cursos,
+                'name'=>$request->name,
+                'dataInicio'=>$request->dataInicio,
+                'dataFinal'=>$request->dataFinal
+            ])->with('error', 'Quantidade de registros que podem ser gerados, ultrapassado');
+        }
+
+        // carregar HTML do conteudo e determinar a orientação e tamanho da página
+        $pdf = PDF::loadView('cursos.pdf',['cursos'=>$cursos])->setPaper('A4', 'portrait');
+
+        // gerar pdf
+        return $pdf->stream('cursos.pdf');
 
     }
 

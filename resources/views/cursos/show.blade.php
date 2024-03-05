@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="container-fluid px-4">
-    <div class="mb-1 space-between-elements bg-light p-1 rounded">    
+    <div class="mb-1 space-between-elements bg-light p-1 rounded">
         <h2 class="mt-3">Curso</h2>
         <ol class="breadcrumb mb-3 mt-3">
             <li class="breadcrumb-item "><a href="#"  class="text-decoration-none"> Dashboard</a></li>
@@ -16,25 +16,25 @@
         <div class="card-header space-between-elements">
            <span>Detalhes</span>
             <span class="d-flex justify-content-center">
-                <a href="{{route('aula.index',['cursoId'=>$curso->id])}}" class="btn btn-info btn-sm me-1"><i class="fa-solid fa-list-ul"></i> Aulas</a> 
+                <a href="{{route('aula.index',['cursoId'=>$curso->id])}}" class="btn btn-info btn-sm me-1"><i class="fa-solid fa-list-ul"></i> Aulas</a>
                 @can('index-curso')
-                    <a href="{{route('curso.index')}}" class="btn btn-info btn-sm me-1"><i class="fa-solid fa-list-ul"></i> Listar Cursos </a> 
+                    <a href="{{route('curso.index')}}" class="btn btn-info btn-sm me-1"><i class="fa-solid fa-list-ul"></i> Listar Cursos </a>
                 @endcan
 
                 @can('edit-curso')
-                    <a href="{{route('curso.edit',['cursoId'=>$curso->id])}}" class="btn btn-warning btn-sm me-1"> <i class="fa-regular fa-pen-to-square"></i>Editar </a> 
+                    <a href="{{route('curso.edit',['cursoId'=>$curso->id])}}" class="btn btn-warning btn-sm me-1"> <i class="fa-regular fa-pen-to-square"></i>Editar </a>
                 @endcan
 
                 {{-- comando usando para ocultar area que esta dentro dele para usuarios que não tem a permissao passada no parametro --}}
                 @can('destroy-curso')
                     {{-- como o navegador não aceita o metodo delete o link de exlcusão precisa esta dentro de um fomuçario --}}
-                    <form method="POST" action="{{route('curso.destroy',['cursoId'=>$curso->id])}}">
+                    <form method="POST" id="edit{{$curso->id}}" action="{{route('curso.destroy',['cursoId'=>$curso->id])}}">
                         @csrf
                         @method('delete')
-                        <button type="submit" class="btn btn-danger btn-sm me-1" onclick="return confirm('Tem certeza excluir?')"><i class="fa-solid fa-trash-can"></i>Excluir</button>
+                        <button type="submit" class="btn btn-danger btn-sm  me-1 btnDelete" data-delete-id="{{ $curso->id }}"><i class="fa-solid fa-trash-can"></i> Excluir</button>
                     </form>
                 @endcan
-                
+
            </span>
         </div>
         <div class="card-body">

@@ -51,6 +51,7 @@ Route::group(['middleware'=>'auth'], function(){
     Route::get('/edit-curso/{cursoId}', [CursoController::class, 'edit'])->name('curso.edit');
     Route::put('/update-curso/{cursoId}',[CursoController::class,'update'])->name('curso.update');
     Route::delete('/destroy-curso/{cursoId}',[CursoController::class,'destroy'])->name('curso.destroy');
+    Route::get('/pdf-curso',[CursoController::class,'gerarPdf'])->name('curso.pdf');
 
     // rotas aulas
     Route::get('/index-aula/{cursoId}',[AulaController::class,'index'])->name('aula.index');
@@ -61,6 +62,7 @@ Route::group(['middleware'=>'auth'], function(){
     Route::get('/edit-aula/{aulaId}', [AulaController::class,'edit'])->name('aula.edit');
     Route::put('/update-aula/{aulaId}', [AulaController::class,'update'])->name('aula.update');
     Route::delete('/destroy-aula/{aulaId}', [AulaController::class,'destroy'])->name('aula.destroy');
+    Route::get('/pdf-aula/{cursoId}', [AulaController::class, 'gerarPdf'])->name('aula.pdf');
 
     // rotas usuarios
     Route::get('/index-usuario',[UserController::class,'index'])->name('usuario.index');
@@ -72,6 +74,7 @@ Route::group(['middleware'=>'auth'], function(){
     Route::get('/edit-usuario-senha/{usuario}',[UserController::class,'editSenha'])->name('usuario.edit-senha');
     Route::put('/update-usuario-senha/{usuario}',[UserController::class,'updateSenha'])->name('usuario.update-senha');
     Route::delete('/destroy-usuario/{usuario}',[UserController::class,'destroy'])->name('usuario.destroy');
+    Route::get('/pdf-usuario',[UserController::class, 'gerarPdf'])->name('usuario-pdf');
 
     // rotas perfil
     Route::get('/show-perfil',[PerfilController::class,'show'])->name('perfil-show');
@@ -88,6 +91,7 @@ Route::group(['middleware'=>'auth'], function(){
     Route::get('/edit-role/{roleId}',[RoleController::class,'edit'])->name('role-edit');
     Route::put('/update-role/{roleId}',[RoleController::class,'update'])->name('role-update');
     Route::delete('/destroy-role/{roleId}',[RoleController::class,'destroy'])->name('role-destroy');
+    Route::get('/pdf-role',[RoleController::class, 'gerarPdf'])->name('role-pdf');
 
     // rotas par permissões do tipo de usuario
     Route::get('/index-role-permission/{roleId}',[RolePermissionController::class,'index'])->name('role-permission-index');
@@ -101,4 +105,5 @@ Route::group(['middleware'=>'auth'], function(){
     Route::get('/edit-permission/{permission}',[PermissionController::class,'edit'])->name('permission-edit');
     Route::put('/update-permission/{permission}',[PermissionController::class,'update'])->name('permission-update');
     Route::delete('/destroy-permission/{permission}',[PermissionController::class,'destroy'])->name('permission-destroy');
+    Route::get('/pdf-permission',[PermissionController::class, 'gerarPdf'])->name('permission-pdf');
 });

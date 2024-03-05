@@ -33,6 +33,7 @@ class PermissionSeeder extends Seeder
             ['title'=>'Editar Usuário', 'name'=> 'edit-usuario'],
             ['title'=>'Editar Senha', 'name'=> 'edit-usuario-senha'],
             ['title'=>'Apagar Usuário', 'name'=> 'destroy-usuario'],
+            ['title'=>'PDF Usuários', 'name'=>'pdf-usuario'],
 
             ['title'=>'Listar Tipos de Usuários', 'name'=> 'index-role'],
             ['title'=>'Cadastrar Tipos de Usuários', 'name'=>'create-role'],
@@ -48,6 +49,8 @@ class PermissionSeeder extends Seeder
             ['title'=>'Cadastrar Permissões', 'name'=> 'create-permission'],
             ['title'=>'Editar Permissão', 'name'=> 'edit-permission'],
             ['title'=>'Apagar Permissão', 'name'=> 'destroy-permission'],
+
+
         ];
 
         foreach($permisions as $permision){

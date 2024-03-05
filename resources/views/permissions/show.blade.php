@@ -25,7 +25,12 @@
                 @endcan
 
                 @can('destroy-permission')
-                    <a href="{{route('permission-destroy',['permission'=>$permission->id])}}" class="btn btn-danger btn-sm me-1"><i class="fa-solid fa-trash-can"></i> Excluir </a>
+                {{-- como o navegador não aceita o metodo delete o link de exlcusão precisa esta dentro de um fomuçario --}}
+                <form method="POST" id="edit{{$permission->id}}" action="{{route('permission-destroy',['permission'=>$permission->id])}}">
+                    @csrf
+                    @method('delete')
+                    <button type="submit" class="btn btn-danger btn-sm me-1 btnDelete" data-delete-id="{{ $permission->id }}" ><i class="fa-solid fa-trash-can"></i> Excluir</button>
+                </form>
                 @endcan
            </span>
         </div>

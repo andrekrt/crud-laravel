@@ -41,8 +41,8 @@
                             value="{{ old('email') }}" class="form-control">
                     </div>
                     <div class="col-12">
-                        <label for="roles" class="form-label">Tipo de Usuário:</label>
-                        <select name="roles" id="roles" class="form-select">
+                        <label for="roles" class="form-label ">Tipo de Usuário:</label>
+                        <select name="roles" id="roles" class="form-select select2">
                             <option value="">Selecione</option>
                             @forelse ($roles as $role)
                                 @if ($role != "Super Admin")

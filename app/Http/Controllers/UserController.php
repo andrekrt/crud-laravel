@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\PDF;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,10 +21,11 @@ class UserController extends Controller
 
         $this->middleware('permission:index-usuario',['only'=>'index']);
         $this->middleware('permission:show-usuario',['only'=>'show']);
-        $this->middleware('permission:edit-usuaro',['only'=>'edit']);
+        $this->middleware('permission:edit-usuario',['only'=>'edit']);
         $this->middleware('permission:create-usuario',['only'=>'create']);
         $this->middleware('permission:edit-usuario-senha',['only'=>'editSenha']);
         $this->middleware('permission:destroy-usuario',['only'=>'destroy']);
+        $this->middleware('permission:pdf-usuario', ['only'=>'gerarPdf']);
     }
 
     public function index(Request $request){
@@ -195,5 +197,45 @@ class UserController extends Controller
         }catch(Exception $e){
             return redirect()->route('usuario.index')->with('error',"Erro ao exlcuir usuário");
         }
+    }
+
+    public function gerarPdf(Request $request){
+        // recuperar todos usuários cadastrados
+        // $usuarios = User::orderBy('id')->get();
+
+        // recuperar usuarios pesquisados
+        $usuarios = User::when($request->has('name'), function($whenQuery) use ($request){
+            $whenQuery->where('name','like', '%'. $request->name. '%');
+        })
+        ->when($request->has('email'), function($whenQuery) use ($request){
+            $whenQuery->where('email','like', '%'. $request->email. '%');
+        })
+        ->when($request->filled('dataInicio'), function($whenQuery) use ($request){
+            $whenQuery->where('created_at', '>=', \Carbon\Carbon::parse($request->dataInicio)->format('Y-m-d H:i:s'));
+        })
+        ->when($request->filled('dataFinal'), function($whenQuery) use ($request){
+            $whenQuery->where('created_at', '<=', \Carbon\Carbon::parse($request->dataFinal)->format('Y-m-d H:i:s'));
+        })
+        ->orderBy('id')->get();
+
+        // total de registros
+        $totalUsuarios = $usuarios->count('id');
+
+        // verificar se a qtd ultrapassou o limite definido
+        if($totalUsuarios>500 ){
+            // redirecionar e enviar mensagem
+            return redirect()->route('usuario.index',[
+                'name'=>$request->name,
+                'email'=>$request->email,
+                'dataInicio'=>$request->dataInicio,
+                'dataFinal'=>$request->dataFinal
+            ])->with('error', 'Quantidade de registros que podem ser gerados, ultrapassado');
+        }
+
+        // carregar a string com o HTML do conteudo e determinar a orientação e tamanhho da pagina
+        $pdf = PDF::loadView('users.pdf', ['usuarios'=>$usuarios])->setPaper('A4', 'portrait');
+
+        // fazer o download do arquivo
+        return $pdf->stream("Usuários.pdf");
     }
 }

@@ -50,7 +50,10 @@
             @can('create-role')
                 <a href="{{route('role-create')}}" class="btn btn-success"> <i class="fa-regular fa-square-plus"></i> Cadastrar Tipo de Usuário</a>
             @endcan
-            <br><br>
+            @can('index-role')
+                {{-- gerar pdf com filtro de pesquisa --}}
+                <a target="_blank" href="{{ url('pdf-role?'.request()->getQueryString()) }}" class="btn btn-success ms-2" > <i class="fa-regular fa-file-pdf"></i>  Gerar PDF </a>
+            @endcan
            </span>
         </div>
         <div class="card-body">
@@ -88,10 +91,10 @@
 
                                 @can('destroy-role')
                                     {{-- como o navegador não aceita o metodo delete o link de exlcusão precisa esta dentro de um fomuçario --}}
-                                    <form method="POST" action="{{route('role-destroy',['roleId'=>$role->id])}}">
+                                    <form method="POST" id="edit{{$role->id}}" action="{{route('role-destroy',['roleId'=>$role->id])}}">
                                         @csrf
                                         @method('delete')
-                                        <button type="submit" class="btn btn-danger btn-sm mb-1 me-1" onclick="return confirm('Tem certeza excluir?')"><i class="fa-solid fa-trash-can"></i> Excluir</button>
+                                        <button type="submit" class="btn btn-danger btn-sm mb-1 me-1 btnDelete" data-delete-id="{{ $role->id }}"><i class="fa-solid fa-trash-can"></i> Excluir</button>
                                     </form>
                                 @endcan
 

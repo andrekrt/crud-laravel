@@ -9,6 +9,16 @@
     {{-- adicionado bootstrap com vite --}}
     @vite(['resources/css/app.css', 'resources/js/app.js']);
 
+    {{-- sweetAlert2 via cdn --}}
+    {{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> --}}
+
+    {{-- select02 --}}
+    {{-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> --}}
+
     <title>Laravel</title>
 </head>
 <body class="sb-nav-fixed sb-sidenav-toggled">

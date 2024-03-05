@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RoleRequest;
+use Barryvdh\DomPDF\Facade\PDF;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -173,5 +174,42 @@ class RoleController extends Controller
             return back()->withInput()->with('error','Tipo de Usuário Não excluído ');
 
         }
+    }
+
+    // gerar pdf
+    public function gerarPdf(Request $request){
+        // recuperar registros do bd
+        $roles = Role::
+        when($request->has('name'), function($whenQuery) use ($request){
+            $whenQuery->where('name', 'like', '%'.$request->name.'%');
+        })
+        ->when($request->filled('dataInicio'), function($whenQuery) use ($request){
+            $whenQuery->where('created_at', '>=', \Carbon\Carbon::parse($request->dataInicio)->format('Y-m-d H:i:s'));
+        })
+        ->when($request->filled('dataFinal'), function($whenQuery) use ($request){
+            $whenQuery->where('created_at', '<=', \Carbon\Carbon::parse($request->dataFinal)->format('Y-m-d H:i:s'));
+        })
+        ->orderBy('id')->get();
+
+        // total de registross
+        $totalRoles = $roles->count('id');
+
+        // verificar se ultrapassou a quantidade maxima
+        if($totalRoles>500){
+            return redirect()->route('role-index',[
+                'menu'=>'roles',
+                'roles'=>$roles,
+                'name'=>$request->name,
+                'dataInicio'=>$request->dataInicio,
+                'dataFinal'=>$request->dataFinal,
+            ])->with('error', 'Quantidade de registros que podem ser gerados, ultrapassado');
+        }
+
+        // carregar a string com o HTML do conteudo e determinar a orientação e tamanhho da pagina
+        $pdf = PDF::loadView('roles.pdf', ['roles'=>$roles])->setPaper('A4', 'portrait');
+
+        // fazer o download do arquivo
+        return $pdf->stream("Tipos de Usuários.pdf");
+
     }
 }

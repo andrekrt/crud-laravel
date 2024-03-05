@@ -27,6 +27,15 @@
                 @can('edit-role')
                     <a href="{{route('role-edit',['roleId'=>$role->id])}}" class="btn btn-warning btn-sm me-1"> <i class="fa-regular fa-pen-to-square"></i>Editar </a>
                 @endcan
+
+                @can('destroy-role')
+                    {{-- como o navegador não aceita o metodo delete o link de exlcusão precisa esta dentro de um fomuçario --}}
+                    <form method="POST" id="edit{{$role->id}}" action="{{route('role-destroy',['roleId'=>$role->id])}}">
+                        @csrf
+                        @method('delete')
+                        <button type="submit" class="btn btn-danger btn-sm  me-1 btnDelete" data-delete-id="{{ $role->id }}"><i class="fa-solid fa-trash-can"></i> Excluir</button>
+                    </form>
+                @endcan
            </span>
         </div>
         <div class="card-body">

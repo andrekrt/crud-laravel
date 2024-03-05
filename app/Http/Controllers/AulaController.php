@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AulaRequest;
 use App\Models\Aula;
 use App\Models\Curso;
+use Barryvdh\DomPDF\Facade\PDF;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -150,6 +151,28 @@ class AulaController extends Controller
         $aulaId->delete();
 
         return redirect()->route('aula.index',['cursoId'=>$aulaId->curso_id])->with('success','Aula Excluída com sucesso');
+    }
+
+    // gerar pdf
+    public function gerarPdf(Request $request, Curso $cursoId){
+        // recuperar registros pesquisados
+        $aulas=Aula::
+        when($request->name, function($whenQuery) use ($request){
+            $whenQuery->where('name','like', '%'.$request->name.'%');
+        })
+        ->when($request->filled('dataInicio'), function($whenQuery) use ($request){
+            $whenQuery->where('created_at', '>=', \Carbon\Carbon::parse($request->dataInicio)->format('Y-m-d H:i:s'));
+        })
+        ->when($request->filled('dataFinal'), function($whenQuery) use ($request){
+            $whenQuery->where('created_at', '<=', \Carbon\Carbon::parse($request->dataFinal)->format('Y-m-d H:i:s'));
+        })
+        ->with('curso')->where('curso_id', $cursoId->id)->orderBy('ordem')->get();
+
+        // carregar a string com o HTML do conteudo e determinar a orientação e tamanhho da pagina
+        $pdf = PDF::loadView('aulas.pdf', ['aulas'=>$aulas])->setPaper('A4', 'portrait');
+
+        // fazer o download do arquivo
+        return $pdf->stream("aulas.pdf");
     }
 
 }

@@ -51,10 +51,13 @@
         <div class="card-header space-between-elements">
            <span>Listar</span>
            <span>
-            @can('create-curso')
+            @can('create-permission')
                 <a href="{{route('permission-create')}}" class="btn btn-success"> <i class="fa-regular fa-square-plus"></i> Cadastrar Permissão</a>
             @endcan
-            <br><br>
+            @can('index-permission')
+                {{-- gerar pdf com filtro de pesquisa --}}
+                <a target="_blank" href="{{ url('pdf-permission?'.request()->getQueryString()) }}" class="btn btn-success ms-2" > <i class="fa-regular fa-file-pdf"></i>  Gerar PDF </a>
+            @endcan
            </span>
         </div>
         <div class="card-body">
@@ -78,20 +81,20 @@
                             <td>{{$permission->title}}</td>
                             <td>{{$permission->name}}</td>
                             <td class="d-md-flex">
-                                @can('show-curso')
+                                @can('show-permission')
                                     <a href="{{route('permission-show',['permission'=>$permission->id])}}" class="btn btn-info btn-sm me-1 mb-1"><i class="fa-solid fa-eye"></i>  Detalhes</a>
                                 @endcan
 
-                                @can('edit-curso')
+                                @can('edit-permission')
                                     <a href="{{route('permission-edit',['permission'=>$permission->id])}}" class="btn btn-warning btn-sm me-1 mb-1"> <i class="fa-regular fa-pen-to-square"></i> Editar </a>
                                 @endcan
 
-                                @can('destroy-curso')
+                                @can('destroy-permission')
                                 {{-- como o navegador não aceita o metodo delete o link de exlcusão precisa esta dentro de um fomuçario --}}
-                                <form method="POST" action="{{route('permission-destroy',['permission'=>$permission->id])}}">
+                                <form method="POST" id="edit{{$permission->id}}" action="{{route('permission-destroy',['permission'=>$permission->id])}}">
                                     @csrf
                                     @method('delete')
-                                    <button type="submit" class="btn btn-danger btn-sm mb-1 me-1" onclick="return confirm('Tem certeza excluir?')"><i class="fa-solid fa-trash-can"></i> Excluir</button>
+                                    <button type="submit" class="btn btn-danger btn-sm mb-1 me-1 btnDelete" data-delete-id="{{ $permission->id }}" ><i class="fa-solid fa-trash-can"></i> Excluir</button>
                                 </form>
                                 @endcan
                             </td>

@@ -39,7 +39,19 @@ class RoleSeeder extends Seeder
                 'edit-usuario',
                 'edit-usuario-senha',
                 'destroy-usuario',
-                'index-role'
+                'pdf-usuario',
+                'index-role',
+                'create-role',
+                'edit-role',
+                'show-role',
+                'destroy-role',
+                'index-role-permissions',
+                'edit-role-permission',
+                'index-permission',
+                'show-permission',
+                'create-permission',
+                'edit-permission',
+                'destroy-permission'
             ]);
         }
 

@@ -50,10 +50,16 @@
     <div class="card mb-4">
         <div class="card-header space-between-elements">
            <span>Listar</span>
-           <span>
-            {{-- <a href="/" class="btn btn-info bnt-sm">Início</a> <br> --}}
+           <span class="d-flex ">
             @can('create-usuario')
-                <a href="{{route('usuario.create')}}" class="btn btn-success"> <i class="fa-regular fa-square-plus"></i> Cadastrar Usuário</a> <br><br>
+                <a href="{{route('usuario.create')}}" class="btn btn-success btn-sm me-2"> <i class="fa-regular fa-square-plus"></i> Cadastrar Usuário</a>
+            @endcan
+            @can('pdf-usuario')
+                {{-- gerar pdf de todos os dados --}}
+                <a href="{{ route('usuario-pdf') }}" class="btn btn-success btn-sm ms-2" > <i class="fa-regular fa-file-pdf"></i>  Gerar PDF</a>
+
+                {{-- gerar pdf com filtro de pesquisa --}}
+                <a target="_blank" href="{{ url('pdf-usuario?'.request()->getQueryString()) }}" class="btn btn-success btn-sm ms-2" > <i class="fa-regular fa-file-pdf"></i>  Gerar PDF com filtro</a>
             @endcan
 
            </span>
@@ -87,10 +93,17 @@
                                 @endcan
                                 @can('destroy-usuario')
                                      {{-- como o navegador não aceita o metodo delete o link de exlcusão precisa esta dentro de um fomuçario --}}
-                                    <form method="POST" action="{{route('usuario.destroy',['usuario'=>$usuario->id])}}">
+                                    {{-- <form method="POST" action="{{route('usuario.destroy',['usuario'=>$usuario->id])}}">
                                         @csrf
                                         @method('delete')
                                         <button type="submit" class="btn btn-danger btn-sm mb-1 me-1" onclick="return confirm('Tem certeza excluir?')"><i class="fa-solid fa-trash-can"></i> Excluir</button>
+                                    </form> --}}
+
+                                    {{-- usar swertalert2 para janela de confirmação --}}
+                                    <form method="POST" id="edit{{$usuario->id}}" action="{{route('usuario.destroy',['usuario'=>$usuario->id])}}">
+                                        @csrf
+                                        @method('delete')
+                                        <button type="submit" class="btn btn-danger btn-sm mb-1 me-1 btnDelete" data-delete-id="{{ $usuario->id }}"><i class="fa-solid fa-trash-can"></i> Excluir</button>
                                     </form>
                                 @endcan
 

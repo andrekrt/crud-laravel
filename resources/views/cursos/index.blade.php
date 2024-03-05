@@ -50,7 +50,9 @@
             @can('create-curso')
                 <a href="{{route('curso.create')}}" class="btn btn-success"> <i class="fa-regular fa-square-plus"></i> Cadastrar Curso</a>
             @endcan
-            <br><br>
+            @can('index-curso')
+                <a target="_blank" href="{{ url('pdf-curso?'.request()->getQueryString()) }}" class="btn btn-success ms-2" > <i class="fa-regular fa-file-pdf"></i>  Gerar PDF</a>
+            @endcan
            </span>
         </div>
         <div class="card-body">
@@ -87,10 +89,10 @@
 
                                 @can('destroy-curso')
                                 {{-- como o navegador não aceita o metodo delete o link de exlcusão precisa esta dentro de um fomuçario --}}
-                                <form method="POST" action="{{route('curso.destroy',['cursoId'=>$curso->id])}}">
+                                <form method="POST" id="edit{{$curso->id}}" action="{{route('curso.destroy',['cursoId'=>$curso->id])}}">
                                     @csrf
                                     @method('delete')
-                                    <button type="submit" class="btn btn-danger btn-sm mb-1 me-1" onclick="return confirm('Tem certeza excluir?')"><i class="fa-solid fa-trash-can"></i> Excluir</button>
+                                    <button type="submit" class="btn btn-danger btn-sm mb-1 me-1 btnDelete" data-delete-id="{{ $curso->id }}"><i class="fa-solid fa-trash-can"></i> Excluir</button>
                                 </form>
                                 @endcan
                             </td>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PermissionRequest;
+use Barryvdh\DomPDF\Facade\PDF;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -168,5 +169,45 @@ class PermissionController extends Controller
             return back()->withInput()->with('error','Permissão não excluída.');
 
         }
+    }
+
+    public function gerarPdf(Request $request){
+        // recuperar os registros
+        $permissions = Permission::
+        when($request->has('title'), function($whenQuery) use ($request){
+            $whenQuery->where('title', 'like', '%'.$request->title.'%');
+        })
+        ->when($request->has('name'), function($whenQuery) use ($request){
+            $whenQuery->where('name', 'like', '%'.$request->name.'%');
+        })
+        ->when($request->filled('dataInicio'), function($whenQuery) use ($request){
+            $whenQuery->where('created_at', '>=', \Carbon\Carbon::parse($request->dataInicio)->format('Y-m-d H:i:s'));
+        })
+        ->when($request->filled('dataFinal'), function($whenQuery) use ($request){
+            $whenQuery->where('created_at', '<=', \Carbon\Carbon::parse($request->dataFinal)->format('Y-m-d H:i:s'));
+        })
+        ->orderBy('id')->get();
+
+        // total de registros
+        $totalPermissions = $permissions->count('id');
+
+        // verificar se a qtd ultrapassou o limite definido
+        if($totalPermissions>500 ){
+            // redirecionar e enviar mensagem
+            return redirect()->route('permission-index',[
+                'menu'=>'permissions',
+                'permissions'=>$permissions,
+                'title'=>$request->title,
+                'name'=>$request->name,
+                'dataInicio'=>$request->dataInicio,
+                'dataFinal'=>$request->dataFinal
+            ])->with('error', 'Quantidade de registros que podem ser gerados, ultrapassado');
+        }
+
+        // carregar a string com o HTML do conteudo e determinar a orientação e tamanhho da pagina
+        $pdf = PDF::loadView('permissions.pdf', ['permissions'=>$permissions])->setPaper('A4', 'portrait');
+
+        // fazer o download do arquivo
+        return $pdf->stream("Permissões.pdf");
     }
 }
