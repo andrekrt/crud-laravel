@@ -241,6 +241,15 @@ Criar seed papel
 php artisan make:seeder RoleSeeder
 ```
 
+Instalar a biblioteca para gerar PDF
+```
+composer require barryvdh/laravel-dompdf
+```
+
+Instalar o sweetalert2
+```
+npm install sweetalert2
+```
 
 ## Enviar para o GitHub
 Iniciar novo packet com GIT na máquina 
