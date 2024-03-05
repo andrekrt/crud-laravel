@@ -15323,3 +15323,5 @@ Cookie: XSRF-TOKEN=SulGpAzH7ElSJEjpoVfedgrcgFuM1AWo8C7k6yC9; adm_session=MgAVqLG
 [2024-03-05 10:34:52] local.INFO: Permissão excluída. {"id":30,"action_user_id":1} 
 [2024-03-05 10:34:53] local.INFO: Listar Permissões {"action_user_id":1} 
 [2024-03-05 10:34:56] local.INFO: Listar Permissões {"action_user_id":1} 
+[2024-03-05 10:47:51] local.INFO: Listar tipos de usuários {"action_user_id":1} 
+[2024-03-05 10:47:55] local.INFO: Listar Permissões {"action_user_id":1} 
